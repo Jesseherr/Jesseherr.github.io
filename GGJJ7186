@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LifeSim Game</title>
+    <style>
+        /* Main styling */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background-color: #f2f2f2;
+        }
+
+        #game-container {
+            text-align: center;
+            max-width: 400px;
+            background: #ffffff;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        #stats-container {
+            font-size: 18px;
+            line-height: 1.6;
+        }
+
+        #action-buttons button, #age-button {
+            margin: 10px;
+            padding: 12px 24px;
+            font-size: 18px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: none;
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        #settings-icon {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        #event-log {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #333;
+            border-top: 1px solid #ddd;
+            padding-top: 10px;
+        }
+
+        /* Full-Screen Menu Style */
+        .full-screen-menu {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #ffffff;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .full-screen-menu h2 {
+            font-size: 2em;
+            margin-bottom: 20px;
+        }
+
+        .full-screen-menu button {
+            margin-top: 10px;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: white;
+            background-color: #333;
+            border-radius: 5px;
+            border: none;
+        }
+
+        .full-screen-menu button:hover {
+            background-color: #555;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>🌎 LifeSim</h1>
+
+        <!-- Display Player Stats -->
+        <div id="stats-container">
+            <p>Age: <span id="age">18</span> years</p>
+            <p>Money: $<span id="money">0</span></p>
+            <p>Followers: <span id="followers">0</span></p>
+            <p>Job: <span id="job">Unemployed</span></p>
+            <p>Income: $<span id="income">0</span> per year</p>
+        </div>
+
+        <!-- Age Button -->
+        <button id="age-button" onclick="ageUp()">+ Age Up</button>
+
+        <!-- Game Actions -->
+        <div id="action-buttons">
+            <button onclick="applyForJob()">👔 Apply for Job</button>
+            <button onclick="postOnSocialMedia()">📱 Social Media</button>
+            <button onclick="showSpecialPathMenu()">🏛️ Special Path</button>
+        </div>
+
+        <!-- Settings Icon -->
+        <div id="settings-icon" onclick="showSettingsMenu()">⚙️</div>
+
+        <!-- Event Log -->
+        <div id="event-log">
+            <p id="event-text">Welcome to LifeSim! Make your choices to start your journey.</p>
+        </div>
+    </div>
+
+    <!-- Full-Screen Special Path Menu -->
+    <div id="special-menu" class="full-screen-menu">
+        <h2>Special Paths</h2>
+        <button onclick="choosePresident()">🇺🇸 Become President</button>
+        <button onclick="chooseOtherSpecial()">🎩 Other Special Job</button>
+        <button onclick="closeFullScreenMenu()">Close</button>
+    </div>
+
+    <!-- Full-Screen Settings Menu -->
+    <div id="settings-menu" class="full-screen-menu">
+        <h2>Settings</h2>
+        <p>Select Background Color:</p>
+        <button onclick="changeBackgroundColor('black')">Black</button>
+        <button onclick="changeBackgroundColor('red')">Red</button>
+        <button onclick="changeBackgroundColor('blue')">Blue</button>
+        <button onclick="changeBackgroundColor('yellow')">Yellow</button>
+        <button onclick="closeFullScreenMenu()">Close</button>
+    </div>
+
+    <script>
+        let age = 18;
+        let money = 0;
+        let followers = 0;
+        let job = "Unemployed";
+        let income = 0;
+
+        function updateStats() {
+            document.getElementById("age").textContent = age;
+            document.getElementById("money").textContent = money.toFixed(2);
+            document.getElementById("followers").textContent = followers;
+            document.getElementById("job").textContent = job;
+            document.getElementById("income").textContent = income.toFixed(2);
+        }
+
+        function displayEvent(message) {
+            document.getElementById("event-text").textContent = message;
+        }
+
+        function ageUp() {
+            age++;
+            money += income;
+            displayEvent(`You aged up to ${age} years!`);
+            updateStats();
+        }
+
+        function applyForJob() {
+            const jobOptions = [
+                { title: "Cashier", income: 20000 },
+                { title: "Retail Worker", income: 25000 },
+                { title: "Software Developer", income: 70000 },
+                { title: "Doctor", income: 120000 },
+                { title: "Teacher", income: 40000 }
+            ];
+
+            const selectedJob = jobOptions[Math.floor(Math.random() * jobOptions.length)];
+            job = selectedJob.title;
+            income = selectedJob.income;
+            displayEvent(`You got a job as a ${job} earning $${income.toLocaleString()} per year.`);
+            updateStats();
+        }
+
+        function postOnSocialMedia() {
+            if (age >= 18) {
+                const newFollowers = Math.floor(Math.random() * 1000);
+                followers += newFollowers;
+                money += newFollowers * 0.05;
+                displayEvent(`You posted online and gained ${newFollowers} followers!`);
+            } else {
+                displayEvent("You must be at least 18 to start on social media.");
+            }
+            updateStats();
+        }
+
+        function showSpecialPathMenu() {
+            document.getElementById("special-menu").style.display = "flex";
+        }
+
+        function showSettingsMenu() {
+            document.getElementById("settings-menu").style.display = "flex";
+        }
+
+        function closeFullScreenMenu() {
+            document.getElementById("special-menu").style.display = "none";
+            document.getElementById("settings-menu").style.display = "none";
+        }
+
+        function choosePresident() {
+            if (age >= 35 && money >= 100000 && followers >= 100000) {
+                displayEvent("🎉 Congratulations! You've become the President of the USA!");
+            } else {
+                displayEvent("To become President, you need to be at least 35, with $100,000 and 100,000 followers.");
+            }
+            closeFullScreenMenu();
+        }
+
+        function chooseOtherSpecial() {
+            displayEvent("✨ You chose another special career path! Adventure awaits!");
+            closeFullScreenMenu();
+        }
+
+        function changeBackgroundColor(color) {
+            document.body.style.backgroundColor = color;
+            closeFullScreenMenu();
+        }
+
+        updateStats();
+    </script>
+</body>
+</html>
